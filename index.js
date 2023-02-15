@@ -77,9 +77,15 @@ do {
     currentPlayer = 'Starfleet';
     if (checkForWinner('Klingon Empire'))
 
+
+function resetGame() {
+  for (let i = 0; i < squares.length; i++) {
+    squares[i].innerHTML = '';
+  }
+  currentPlayer = 'Starfleet';
+}
 function checkForWinner(player) {
-  const winningCombinations = [
-    [0, 1, 2],
+  const winningCombinations = [    [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
     [0, 3, 6],
@@ -97,16 +103,37 @@ function checkForWinner(player) {
       squares[a].innerHTML === squares[b].innerHTML &&
       squares[b].innerHTML === squares[c].innerHTML
     ) {
-      return true;
+      return winningCombinations[i];
     }
   }
 
-  return false;
+  return null;
 }
 
-function resetGame() {
-  for (let i = 0; i < squares.length; i++) {
-    squares[i].innerHTML = '';
-  }
-  currentPlayer = 'Starfleet';
+for (let i = 0; i < squares.length; i++) {
+  squares[i].addEventListener('click', function() {
+    if (this.innerHTML === '') {
+      if (currentPlayer === 'Starfleet') {
+        this.innerHTML = '<img src="https://davejamesonair.files.wordpress.com/2016/09/star-trek-combadge.jpg" style="width: 100%; height: 100%;">';
+        currentPlayer = 'Klingon Empire';
+        const winner = checkForWinner('Starfleet');
+        if (winner) {
+          starfleetScore++;
+          scoreBoard.innerHTML = 'Starfleet: ' + starfleetScore + ' Klingon Empire: ' + klingonScore;
+          document.querySelector('#winner').innerHTML = 'Starfleet wins!';
+          resetGame();
+        }
+      } else {
+        this.innerHTML = '<img src="https://cdn.shopify.com/s/files/1/0289/1534/products/QMx_ST_Klingon_Badge_988x988_01_medium.jpg?v=1532970298" style="width: 100%; height: 100%;">';
+        currentPlayer = 'Starfleet';
+        const winner = checkForWinner('Klingon Empire');
+        if (winner) {
+          klingonScore++;
+          scoreBoard.innerHTML = 'Starfleet: ' + starfleetScore + ' Klingon Empire: ' + klingonScore;
+          document.querySelector('#winner').innerHTML = 'Klingon Empire wins!';
+          resetGame();
+        }
+      }
+    }
+  });
 }
